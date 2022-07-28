@@ -43,9 +43,15 @@ body {
     width: 250px;
     height: 250px;
     border: solid black 2px;
+    cursor: pointer;
 }
 
-.player-character:hover {
+.pc-active {
+    border: solid red 5px;
+    transform: scale(1.1)
+}
+
+.pchover:hover {
     animation: 1s ease-in shuffle;
     animation-iteration-count: infinite;
     border: solid black 5px;
@@ -108,11 +114,11 @@ body {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    width: 100%;
 }
 
 .player-col {
     display: flex;
+    
     flex-direction: column;
     justify-content: center;
     align-items: center;

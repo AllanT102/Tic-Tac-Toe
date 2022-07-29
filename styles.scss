@@ -16,6 +16,7 @@ body {
 // pregame display
 
 #pregame-display {
+    position: absolute;
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
@@ -100,9 +101,12 @@ body {
 // game display
 
 #game-display {
+    visibility: hidden;
+    position: absolute;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100vw;
     height: 100vh;
     div {
         flex: 1;
@@ -203,5 +207,15 @@ body {
 
     100% {
         transform: scale(1);
+    }
+}
+
+@keyframes zoom-out {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(0);
     }
 }

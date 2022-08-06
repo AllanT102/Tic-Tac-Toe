@@ -6,19 +6,22 @@ const Gameboard = (function () {
     const getBox = (num) => _board[num]
 
     const setValue = (num, player) => {
-        const htmlField = document.querySelector(`.game-grid:nth-child(${num + 1})`)
-        htmlField.textContent = player.getSign()
-        getBox(num) = player.getSign()
+        _board[num] = player.getSign()
     }
 
     const resetBoard = () => {
         _board.forEach(box => box = '')
     }
 
+    const getBoard = () => {
+        return _board
+    }
+
     return {
         getBox,
         setValue,
-        resetBoard
+        resetBoard,
+        getBoard
     }
 })()
 
@@ -153,6 +156,7 @@ const GameController = (function() {
     const players = GameMenu.getPlayers()
     const p1image = document.querySelector('[data-img="p1-img"')
     const p2image = document.querySelector('[data-img="p2-img"')
+    const gameBoard = Gameboard.getBoard()
     let playerTurn // true means p1 turn false means p2 turn
 
     function setFirstPlayer() {
@@ -189,13 +193,22 @@ const GameController = (function() {
     function addGridControls() {
         gridBoxes.forEach(box => {
             box.addEventListener('click', () => {
-                let player = getPlayerTurn()
-                const span = document.createElement('span')
-                player.getSign() === 'X' ? span.textContent = 'X' : span.textContent = 'O'
-                box.appendChild(span)
-                player === players[0] ? setTurn(players[1]) : setTurn(players[0])
+                if (!box.classList.contains('active')) {
+                    let player = getPlayerTurn()
+                    const span = document.createElement('span')
+                    player.getSign() === 'X' ? span.textContent = 'X' : span.textContent = 'O'
+                    box.appendChild(span)
+                    player === players[0] ? setTurn(players[1]) : setTurn(players[0])
+                    setBoardValue(player, box)
+                    box.classList.add('active')
+                }
             })
         })
+    }
+
+    function setBoardValue(player, box) {
+        const boxNum = box.getAttribute('data-boxnum')
+        Gameboard.setValue(boxNum, player)
     }
 
     function init() {

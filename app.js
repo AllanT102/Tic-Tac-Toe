@@ -51,6 +51,7 @@ const GameMenu = (function() {
     const playerSelection = document.querySelectorAll('.player-character')
     const p1options = document.querySelector('[data-poption="p1-op"')
     const p2options = document.querySelector('[data-poption="p2-op"')
+    const playerCols = document.querySelectorAll('.player-col')
     const p1name = document.querySelector('#p1-name')
     const p2name = document.querySelector('#p2-name')
     const playBtn = document.querySelector('.play-button')
@@ -107,13 +108,30 @@ const GameMenu = (function() {
                 const p2image = document.querySelector('[data-img="p2-img"')
                 p1image.src = _player1.getImage()
                 p2image.src = _player2.getImage()
+
+                const p1Name = document.createElement('span')
+                const p2Name = document.createElement('span')
+                p1Name.textContent = p1name.value
+                p2Name.textContent = p2name.value
+                p1Name.classList.add('name-text')
+                p2Name.classList.add('name-text')
+                const [p1, p2] = playerCols
+                p1.appendChild(p1Name)
+                p2.appendChild(p2Name)
             }, 1000)
         }
     }
 
+
     function _setPlayerInfo() {
         let rand = Math.random(2)
-        rand === 1
+        if (rand === 1) {
+            _player1.setSign('X')
+            _player2.setSign('O')
+        } else {
+            _player1.setSign('O')
+            _player2.setSign('X')
+        }
         _player1.setName(p1name.value)
         _player2.setName(p2name.value)
     }
@@ -131,9 +149,62 @@ const GameMenu = (function() {
 })()
 
 const GameController = (function() {
-    let player1 = Player('X')
-    let player2 = Player('O')
-})
+    const gridBoxes = document.querySelectorAll('.grid-box')
+    const players = GameMenu.getPlayers()
+    const p1image = document.querySelector('[data-img="p1-img"')
+    const p2image = document.querySelector('[data-img="p2-img"')
+    let playerTurn // true means p1 turn false means p2 turn
+
+    function setFirstPlayer() {
+        let rand = Math.floor(Math.random() * 2) + 1
+        if (rand === 1) {
+            playerTurn = true
+            p1image.style.borderColor = "red"
+        } else {
+            playerTurn = false
+            p2image.style.borderColor = "red"
+        }
+    }
+
+    function checkWin() {
+
+    }
+
+    function getPlayerTurn() {
+        return playerTurn ?  players[0] : players[1]
+    }
+
+    function setTurn(player) {
+        if (player === players[0]) {
+            p1image.style.borderColor = "red"
+            p2image.style.borderColor = null
+        } else {
+            p1image.style.borderColor = null
+            p2image.style.borderColor = "red"
+        }
+        playerTurn = !playerTurn
+    }
+
+
+    function addGridControls() {
+        gridBoxes.forEach(box => {
+            box.addEventListener('click', () => {
+                let player = getPlayerTurn()
+                const span = document.createElement('span')
+                player.getSign() === 'X' ? span.textContent = 'X' : span.textContent = 'O'
+                box.appendChild(span)
+                player === players[0] ? setTurn(players[1]) : setTurn(players[0])
+            })
+        })
+    }
+
+    function init() {
+        addGridControls()
+        setFirstPlayer()
+    }
+
+    init()
+})()
 
 
 

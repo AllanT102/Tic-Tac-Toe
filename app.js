@@ -88,7 +88,7 @@ const GameMenu = (function() {
         Gameboard.resetBoard()
         GameController.clearGrid()
         playerImages.forEach(i => i.style.borderColor = "white")
-        resetDisplay()
+        _resetDisplay()
         GameController.setFirstPlayer()
         winner = null
     })
@@ -140,7 +140,7 @@ const GameMenu = (function() {
         }
     }
 
-    function resetDisplay() {
+    function _resetDisplay() {
         endGameDisplay.classList.remove('end-screen')
         gameDisplay.classList.remove('game-display-end')
     }
@@ -209,7 +209,7 @@ const GameController = (function() {
         }
     }
 
-    function checkWin() {
+    function _checkWin() {
         for (let i = 0; i < winBoards.length; i++) {
             let allSame = true
             let choice = Gameboard.getBox(winBoards[i][0])
@@ -225,11 +225,11 @@ const GameController = (function() {
                 return true
             }
         }
-        checkTie()
+        _checkTie()
         return false
     }
 
-    function checkTie() {
+    function _checkTie() {
         let allFilled = true
         gridBoxes.forEach(box => {
             if (!box.classList.contains('active')) allFilled = false
@@ -237,12 +237,12 @@ const GameController = (function() {
         if (allFilled) {
             tied = true
             gameEnded = true
-            triggerEndGame()
+            _triggerEndGame()
         }
     }
     
 
-    function triggerEndGame() {
+    function _triggerEndGame() {
         if (gameEnded) {
             if (winner !== undefined) GameMenu.displayEndGame(winner.getName())
             else GameMenu.displayEndGame("tie")
@@ -252,11 +252,11 @@ const GameController = (function() {
         }
     }
 
-    function getPlayerTurn() {
+    function _getPlayerTurn() {
         return playerTurn ?  players[0] : players[1]
     }
 
-    function setTurn(player) {
+    function _setTurn(player) {
         if (player === players[0]) {
             p1image.style.borderColor = "red"
             p2image.style.borderColor = null
@@ -268,24 +268,24 @@ const GameController = (function() {
     }
 
 
-    function addGridControls() {
+    function _addGridControls() {
         gridBoxes.forEach(box => {
             box.addEventListener('click', () => {
                 if (!box.classList.contains('active')) {
-                    let player = getPlayerTurn()
+                    let player = _getPlayerTurn()
                     const span = document.createElement('span')
                     player.getSign() === 'X' ? span.textContent = 'X' : span.textContent = 'O'
                     box.appendChild(span)
-                    setBoardValue(player, box)
+                    _setBoardValue(player, box)
                     box.classList.add('active')
-                    if (!checkWin()) player === players[0] ? setTurn(players[1]) : setTurn(players[0])
-                    triggerEndGame()
+                    if (!_checkWin()) player === players[0] ? _setTurn(players[1]) : _setTurn(players[0])
+                    _triggerEndGame()
                 }
             })
         })
     }
 
-    function setBoardValue(player, box) {
+    function _setBoardValue(player, box) {
         const boxNum = box.getAttribute('data-boxnum')
         Gameboard.setValue(boxNum, player)
     }
@@ -298,7 +298,7 @@ const GameController = (function() {
     }
 
     function init() {
-        addGridControls()
+        _addGridControls()
         setFirstPlayer()
     }
 
